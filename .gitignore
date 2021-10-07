@@ -1,0 +1,5 @@
+node_modules
+wasi-sdk
+*.wasm
+.vscode
+package-lock.json
