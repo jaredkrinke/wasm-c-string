@@ -15,3 +15,7 @@ void WASM_EXPORT(deallocate)(void* allocation) {
 const char* WASM_EXPORT(string_duplicate)(const char *source) {
     return strdup(source);
 }
+
+unsigned int WASM_EXPORT(get_memory_size)() {
+    return __builtin_wasm_memory_size(0);
+}
