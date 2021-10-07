@@ -3,7 +3,7 @@ import { strict as assert } from "assert";
 import { promises } from "fs";
 import { fileURLToPath } from 'url';
 import path from "path";
-import { useNewInstanceString, getInstanceString } from "../wasm-c-string.js";
+import { createCString, receiveCString } from "../wasm-c-string.js";
 
 const pathToTestFolder = path.relative(process.cwd(), path.dirname(fileURLToPath(import.meta.url)));
 
@@ -12,8 +12,8 @@ describe("wasm-c-string", () => {
         const testStringRoundTrip = async (str) => {
             const module = (await WebAssembly.instantiate(await promises.readFile(`./${pathToTestFolder}/wasm-c-string-test.wasm`)));
             let strOutput;
-            useNewInstanceString(module, str, strAddress => {
-                strOutput = getInstanceString(module, () => module.instance.exports.string_duplicate(strAddress));
+            createCString(module, str, strAddress => {
+                strOutput = receiveCString(module, () => module.instance.exports.string_duplicate(strAddress));
             })
             assert.strictEqual(strOutput, str);
         };
