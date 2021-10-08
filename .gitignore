@@ -3,3 +3,4 @@ wasi-sdk
 *.wasm
 .vscode
 package-lock.json
+dist
