@@ -19,8 +19,8 @@ const loadTestModule = async () => {
 };
 
 describe("wasm-c-string", () => {
-    const testStringRoundTrip = async (str) => {
-        const module = (await loadTestModule());
+    const testStringRoundTrip = async (str, loadedModule) => {
+        const module = loadedModule ?? (await loadTestModule());
         let strOutput;
         createCString(module, str, strAddress => {
             strOutput = receiveCString(module, () => module.instance.exports.string_duplicate(strAddress));
@@ -37,7 +37,6 @@ describe("wasm-c-string", () => {
         it("Very long string", () => testStringRoundTrip(longString));
     });
 
-    // TODO: This reports that the memory size is not growing *at all* -- that can't be correct... right?
     describe("Memory management", () => {
         it("No obvious memory leaks", async () => {
             // Note the initial memory size
@@ -47,14 +46,14 @@ describe("wasm-c-string", () => {
             const startingMemorySize = getMemorySize();
 
             // Memory will likely grow after a large allocation
-            testStringRoundTrip(longString);
+            testStringRoundTrip(longString, module);
             const grownMemorySize = getMemorySize();
 
             // Repeatedly allocate and free
             console.log(`Starting memory size: ${startingMemorySize}; after ${longString.length} character allocation, memory size: ${grownMemorySize}`);
             assert.ok(grownMemorySize >= startingMemorySize)
             for (let i = 0; i < 16; i++) {
-                testStringRoundTrip(longString);
+                testStringRoundTrip(longString, module);
             }
 
             // Memory size should not have grown, assuming the allocator reuses the freed allocations
