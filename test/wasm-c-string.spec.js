@@ -19,13 +19,14 @@ const loadTestModule = async () => {
 };
 
 describe("wasm-c-string", () => {
-    const testStringRoundTrip = async (str, loadedModule) => {
+    const testStringRoundTrip = async (str, loadedModule, differentExpectedResult) => {
         const module = loadedModule ?? (await loadTestModule());
+        const expectedResult = differentExpectedResult ?? str;
         let strOutput;
         createCString(module, str, strAddress => {
             strOutput = receiveCString(module, () => module.instance.exports.string_duplicate(strAddress));
         })
-        assert.strictEqual(strOutput, str);
+        assert.strictEqual(strOutput, expectedResult);
     };
 
     describe("String round-tripping", () => {
@@ -35,6 +36,8 @@ describe("wasm-c-string", () => {
         it("Chinese", () => testStringRoundTrip("子曰：「學而時習之，不亦說乎？有朋自遠方來，不亦樂乎？人不知而不慍，不亦君子乎？」"));
         it("Arabic", () => testStringRoundTrip("بِسْمِ ٱللّٰهِ ٱلرَّحْمـَبنِ ٱلرَّحِيمِ"));
         it("Very long string", () => testStringRoundTrip(longString));
+
+        it("Embedded nulls not supported", () => testStringRoundTrip("String with a null right here: >\u0000<", null, "String with a null right here: >"));
     });
 
     describe("Memory management", () => {
@@ -61,5 +64,4 @@ describe("wasm-c-string", () => {
             assert.strictEqual(getMemorySize(), grownMemorySize);
         });
     });
-    // TODO: Mess with the heap first? To make sure it's not just getting lucky with null terminators
 });

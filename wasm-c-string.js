@@ -14,8 +14,7 @@ export const createCString = (module, str, run) => {
     const address = module.instance.exports.allocate(encodedString.length);
     try {
         const destination = new Uint8Array(module.instance.exports.memory.buffer, address);
-        // TODO: Only encode once
-        textEncoder.encodeInto(nullTerminatedString, destination);
+        destination.set(encodedString);
         return run(address);
     } finally {
         module.instance.exports.deallocate(address);
