@@ -10,6 +10,7 @@
     "build:test": "node build/build-test.js",
     "test": "npx mocha test/*.spec.js"
   },
+  "files": [],
   "engines": {
     "node": ">=14"
   },
