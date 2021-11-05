@@ -2,6 +2,7 @@
   "name": "wasm-c-string",
   "version": "1.0.2",
   "description": "Library for passing JavaScript strings in and out of WebAssembly modules written in C",
+  "license": "Unlicense",
   "type": "module",
   "main": "wasm-c-string.js",
   "scripts": {
