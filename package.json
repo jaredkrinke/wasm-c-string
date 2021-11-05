@@ -1,6 +1,6 @@
 {
   "name": "wasm-c-string",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Library for passing JavaScript strings in and out of WebAssembly modules written in C",
   "type": "module",
   "main": "wasm-c-string.js",
@@ -9,10 +9,10 @@
     "build:test": "node build/build-test.js",
     "test": "npx mocha test/*.spec.js"
   },
+  "engines": {
+    "node": ">=14"
+  },
   "devDependencies": {
     "mocha": "^9.1.2"
-  },
-  "files": [
-    "wasm-c-string.js"
-  ]
+  }
 }

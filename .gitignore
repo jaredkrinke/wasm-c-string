@@ -4,3 +4,4 @@ wasi-sdk
 .vscode
 package-lock.json
 dist
+*.tgz
